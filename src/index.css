@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+h1{
+	height:10%;
+}
+#mapcontainer{
+	height:70%;
+}
+#controlcontainer{
+	height:30%;
+}
+#root{
+	height:100%;
+}
