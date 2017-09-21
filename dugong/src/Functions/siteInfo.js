@@ -14,7 +14,12 @@ class SiteInfo extends Component {
           <div>
           <Col md={5}>
           <h4>Site Info</h4>
-          <p>Important stuff here<br></br>{this.props.stuff}
+          <p>Important stuff here<br></br>{this.props.stuff}<br></br>
+          ID: {this.props.SI_id}<br></br>
+          Height: {this.props.SI_height}<br></br>
+          Base Height: {this.props.SI_baseHeight}<br></br>
+          Colour: {this.props.SI_colour}
+          <br></br><br></br>
           Lot number: <br></br>
           Council:<br></br>
           HOB: <br></br>

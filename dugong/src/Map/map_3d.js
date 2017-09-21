@@ -31,12 +31,14 @@ var filteredGeojson = {"type":"FeatureCollection","features":[{"type":"Feature",
   "type": "Polygon","coordinates": [[[151.205292222514,-33.8717258167423],[151.205298900679,-33.8717832668887],
   [151.205307631595,-33.8718573721096],[151.205527141532,-33.8718452797009],[151.205513803131,-33.871713060999],
   [151.205292222514,-33.8717258167423]]]},"properties":{"id":"0","height":20,"base_height":0,"colour":"#5d6eb6"}}]};
-
+var FG_ID = filteredGeojson.features[0].properties.id;
+var FG_height = filteredGeojson.features[0].properties.height;
+var FG_Baseheight = filteredGeojson.features[0].properties.base_height;
+var FG_colour = filteredGeojson.features[0].properties.colour;
 
 const Map = ReactMapboxGl({
   accessToken:'pk.eyJ1IjoibWFkZWxlaW5lam9oYW5zb24iLCJhIjoiY2lzczduYzJ4MDZrODJucGh0Mm1xbmVxNCJ9.i7q4iT8FFgh_y5v4we5UhQ'
 });
-
 
 //magik happens here
 class Map3D extends Component {
@@ -44,7 +46,7 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, toggle: true, opacity:0.5};
+    this.state = {filter: filteredGeojson, toggle: true, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " "};
     this.opacityChange = this.opacityChange.bind(this);
   }
 //sets map position so map doesnt refresh
@@ -73,8 +75,16 @@ class Map3D extends Component {
     filteredFeature = filteredFeature.filter(function(n){ return n !== undefined });
     //makes the extracted matching features into a geojson
     filteredGeojson = {"type": "FeatureCollection", "features": filteredFeature};
+    var FG_ID1 = filteredGeojson.features[0].properties.id;
+    var FG_height1 = filteredGeojson.features[0].properties.height;
+    var FG_Baseheight1 = filteredGeojson.features[0].properties.base_height;
+    var FG_height2 = filteredGeojson.features[1].properties.height;
+    var FG_Baseheight2 = filteredGeojson.features[1].properties.base_height;
+    var FG_totalHeight = (FG_height2-FG_Baseheight2)+FG_height1;
+    var FG_colour1 = filteredGeojson.features[0].properties.colour;
+    console.log(FG_totalHeight)
     //swaps old geojson for new
-    this.setState({filter: filteredGeojson})
+    this.setState({filter: filteredGeojson, siteInfo_ID: FG_ID1, siteInfo_height: FG_totalHeight, siteInfo_baseHeight: FG_Baseheight1, siteInfo_colour: FG_colour1})
     //toggle is set to false so the area is unclickable
     this.setState({toggle: false})
     return
@@ -224,7 +234,12 @@ class Map3D extends Component {
             </Col>
             </Row>
             <Row id='controlcontainer'>
-            <SiteInfo stuff={this.state.string}
+            <SiteInfo 
+            stuff={this.state.string}
+            SI_id={this.state.siteInfo_ID}
+            SI_height={this.state.siteInfo_height}
+            SI_baseHeight={this.state.siteInfo_baseHeight}
+            SI_colour={this.state.siteInfo_colour}
             />
             
             </Row>
