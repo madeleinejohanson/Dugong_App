@@ -9,7 +9,7 @@ class SiteInfo extends Component {
 
 
   render() {
-    console.log(this.props.stuff)
+
     return (
           <div>
           <Col md={5}>

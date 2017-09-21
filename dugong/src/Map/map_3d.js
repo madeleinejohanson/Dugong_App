@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactMapboxGl, { Layer , GeoJSONLayer, ScaleControl} from "react-mapbox-gl";
 import DrawControl from 'react-mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import { CirclePicker } from 'react-color';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import geojson from "./GeoJSON/minicity2d.js";
@@ -31,10 +32,6 @@ var filteredGeojson = {"type":"FeatureCollection","features":[{"type":"Feature",
   "type": "Polygon","coordinates": [[[151.205292222514,-33.8717258167423],[151.205298900679,-33.8717832668887],
   [151.205307631595,-33.8718573721096],[151.205527141532,-33.8718452797009],[151.205513803131,-33.871713060999],
   [151.205292222514,-33.8717258167423]]]},"properties":{"id":"0","height":20,"base_height":0,"colour":"#5d6eb6"}}]};
-var FG_ID = filteredGeojson.features[0].properties.id;
-var FG_height = filteredGeojson.features[0].properties.height;
-var FG_Baseheight = filteredGeojson.features[0].properties.base_height;
-var FG_colour = filteredGeojson.features[0].properties.colour;
 
 const Map = ReactMapboxGl({
   accessToken:'pk.eyJ1IjoibWFkZWxlaW5lam9oYW5zb24iLCJhIjoiY2lzczduYzJ4MDZrODJucGh0Mm1xbmVxNCJ9.i7q4iT8FFgh_y5v4we5UhQ'
@@ -46,12 +43,15 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, toggle: true, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " "};
+    this.state = {filter: filteredGeojson, toggle: true, draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " "};
     this.opacityChange = this.opacityChange.bind(this);
+    this.extrudeChange = this.extrudeChange.bind(this);
+    this.extrudeBaseChange = this.extrudeBaseChange.bind(this);
+    this.colourChange = this.colourChange.bind(this);
   }
 //sets map position so map doesnt refresh
     componentWillMount() {
-     this.setState({ zoom: [15], center: [151.2049, -33.8687], pitch: 45, bearing: -17.6 , string: "hahahahahah"});
+     this.setState({ zoom: [15], center: [151.2049, -33.8687], pitch: 45, bearing: -17.6 });
   }
 
 //FUNCTION THAT HAPPENS WHEN YOU CLICK ON THE MAP
@@ -105,14 +105,34 @@ class Map3D extends Component {
   this.setState({toggle: true});
   }
 
-  opacityChange() {
-    console.log(this.input.value);
-    this.setState({opacity:this.input.value})
+  handleExtrude(e){
+    var draw_geojson = this.drawControl.draw.getSelected()
+    console.log(draw_geojson);
+    this.setState({draw: e.draw_geojson})
+    console.log("extrude button clicked")
   }
+
+  opacityChange(event) {
+    this.setState({opacity:event.target.value})
+  }
+
+  extrudeChange(event){
+    this.setState({draw_height:event.target.value})
+  }
+
+  extrudeBaseChange(event){
+    this.setState({draw_baseHeight:event.target.value})
+  }
+
+  colourChange = (color) => {
+    this.setState({ draw_colour: color.hex });
+  };
 
     render () {
         var opacity = parseFloat(this.state.opacity)
-        console.log(opacity)
+        var draw_height = parseFloat(this.state.draw_height)
+        var draw_baseHeight = parseFloat(this.state.draw_baseHeight)
+        var draw_colour = String(this.state.draw_colour)
         return (
             <div>
             <Row id='mapcontainer' className="show-grid">
@@ -127,30 +147,9 @@ class Map3D extends Component {
                 onClick={this._onClickMap}
                 // onChange={this.handleChange}
             >
-            
-                <Layer
-                  id="3d-buildings"
-                  sourceId="composite"
-                  layerOptions={{
-                    'source-layer': 'building',
-                    'filter': ['==', 'extrude', 'true'],
-                    'type': 'fill-extrusion',
-                    'minzoom': 15
-                  }}
-                  paint={{
-                    'fill-extrusion-color': '#aaa',
-                    'fill-extrusion-height': {
-                        'type': 'identity',
-                        'property': 'height'
-                    },
-                    'fill-extrusion-base': {
-                        'type': 'identity',
-                        'property': 'min_height'
-                    }
-                  }}
-                /> 
                 <DrawControl 
                 displayControlsDefault={false}
+                ref={(drawControl) => { this.drawControl = drawControl; }}
                 controls={{
                 "polygon" : true,
                 "trash" : true
@@ -195,6 +194,18 @@ class Map3D extends Component {
                     'fill-extrusion-opacity' : opacity
                   }}
                 />
+                <GeoJSONLayer
+                id="draw_layer"
+                data={this.state.draw}
+                fillExtrusionPaint={{
+                'fill-extrusion-color': draw_colour
+                    ,
+                    'fill-extrusion-height': draw_height
+                    ,
+                    'fill-extrusion-base': draw_baseHeight
+                  }}
+                />
+
             </Map>
             </Col>
             <Col md={2}> 
@@ -208,7 +219,7 @@ class Map3D extends Component {
             {opacity}
             <input 
             style={{ width: 250 }}
-            id="typeinp" 
+            id="opacity_slider" 
             type="range" 
             defaultValue="0.5"
             min="0" max="1"  
@@ -217,20 +228,39 @@ class Map3D extends Component {
             ref={(input) => this.input = input}
             />
             <br></br>
-            <p>Building footprint extrusion slider </p>
+            <button onClick={this.handleExtrude.bind(this)}>
+            EXTRUDE SELECTED
+            </button> <br></br>
+            <p>Height</p>
+            {draw_height}
             <br></br>
             <input 
             style={{ width: 250 }}
-            id="typeinp" 
+            id="extrude_slider" 
             type="range" 
             defaultValue="0"
-            min="0" max="1" //height from filteredgeojson? 
+            min="0" max="150"
             step="3"
-            // onChange={this.opacityChange.bind(this)}
-            // ref={(input) => this.input = input}
+            onChange={this.extrudeChange.bind(this)}
+            ref={(input) => this.input = input}
             />
             <br></br>
-            <p>this is a state:</p> {this.state.string}
+            <p>Base Height</p>
+            {draw_baseHeight}
+            <br></br>
+            <input 
+            style={{ width: 250 }}
+            id="extrude_slider_base" 
+            type="range" 
+            defaultValue="0"
+            min="0" max={draw_height} 
+            step="3"
+            onChange={this.extrudeBaseChange.bind(this)}
+            ref={(input) => this.input = input}
+            />
+            <CirclePicker
+            onChangeComplete={ this.colourChange }
+            />
             </Col>
             </Row>
             <Row id='controlcontainer'>
