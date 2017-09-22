@@ -45,7 +45,7 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, toggle: true, draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " "};
+    this.state = {filter: filteredGeojson, toggle: true, feaso_HOB: " ", feaso_level: " ", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: " ", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " "};
     this.opacityChange = this.opacityChange.bind(this);
     this.extrudeChange = this.extrudeChange.bind(this);
     this.extrudeBaseChange = this.extrudeBaseChange.bind(this);
@@ -86,7 +86,7 @@ class Map3D extends Component {
     var FG_colour1 = filteredGeojson.features[0].properties.colour;
     console.log(FG_totalHeight)
     //swaps old geojson for new
-    this.setState({filter: filteredGeojson, siteInfo_ID: FG_ID1, siteInfo_height: FG_totalHeight, siteInfo_baseHeight: FG_Baseheight1, siteInfo_colour: FG_colour1})
+    this.setState({filter: filteredGeojson, freassiteInfo_ID: FG_ID1, siteInfo_height: FG_totalHeight, siteInfo_baseHeight: FG_Baseheight1, siteInfo_colour: FG_colour1})
     //toggle is set to false so the area is unclickable
     this.setState({toggle: false})
     return
@@ -111,7 +111,10 @@ class Map3D extends Component {
     var draw_geojson = this.drawControl.draw.getSelected();
     this.setState({draw: draw_geojson})
     var draw_area = area(draw_geojson);
-    console.log(draw_area)
+    var rounded_area = Math.round(draw_area*100)/100;
+    var lvl = parseFloat(this.state.feaso_level)
+    var level_area = rounded_area*lvl;
+    this.setState({feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2",})
   }
 
   opacityChange(event) {
@@ -120,6 +123,8 @@ class Map3D extends Component {
 
   extrudeChange(event){
     this.setState({draw_height:event.target.value})
+    var levels = event.target.value/3;
+    this.setState({draw_height:event.target.value, feaso_level: levels})
   }
 
   extrudeBaseChange(event){
@@ -142,7 +147,7 @@ class Map3D extends Component {
         return (
             <div>
             <Row id='mapcontainer' className="show-grid">
-            <Col md={9}> 
+           <Col xs={12} md={9} > 
             <Map
                 style='mapbox://styles/mapbox/streets-v9'
                 containerStyle={containerStyle} 
@@ -214,7 +219,7 @@ class Map3D extends Component {
 
             </Map>
             </Col>
-            <Col md={2}> 
+            <Col xs={6} md={2}> 
             <h3>User Controls</h3><br></br>
             <button onClick={this.handleClick.bind(this)}>
             {this.state.toggle ? 'SELECT SITE' : 'SELECT NEW SITE'}
@@ -280,6 +285,11 @@ class Map3D extends Component {
             SI_height={this.state.siteInfo_height}
             SI_baseHeight={this.state.siteInfo_baseHeight}
             SI_colour={this.state.siteInfo_colour}
+            F_HOB={this.state.draw_height}
+            F_level={this.state.feaso_level}
+            F_area={this.state.feaso_area}
+            F_FSR={this.state.feaso_FSR}
+            F_areaB={this.state.feaso_areabuilding}
             />
             
             </Row>
