@@ -98,7 +98,7 @@ class Map3D extends Component {
 
 
   handleChange(e){
-    this.setState({filter: e.filteredGeojson})
+    this.setState({filter: filteredGeojson})
   }
   //when the button is clicked, the toggle state is set to true
   handleClick() {
@@ -106,10 +106,8 @@ class Map3D extends Component {
   }
 
   handleExtrude(e){
-    var draw_geojson = this.drawControl.draw.getSelected()
-    console.log(draw_geojson);
-    this.setState({draw: e.draw_geojson})
-    console.log("extrude button clicked")
+    var draw_geojson = this.drawControl.draw.getSelected();
+    this.setState({draw: draw_geojson})
   }
 
   opacityChange(event) {
@@ -127,6 +125,10 @@ class Map3D extends Component {
   colourChange = (color) => {
     this.setState({ draw_colour: color.hex });
   };
+
+  handleGist(e){
+    console.log("saved ya building!")
+  }
 
     render () {
         var opacity = parseFloat(this.state.opacity)
@@ -209,13 +211,13 @@ class Map3D extends Component {
             </Map>
             </Col>
             <Col md={2}> 
-            <h3>User Controls</h3>
+            <h3>User Controls</h3><br></br>
             <button onClick={this.handleClick.bind(this)}>
             {this.state.toggle ? 'SELECT SITE' : 'SELECT NEW SITE'}
             </button>
             <br></br>
             <br></br>
-            <p>Max envelope transparency slider</p>
+            <p>Site Envelope Transparency</p>
             {opacity}
             <input 
             style={{ width: 250 }}
@@ -227,10 +229,10 @@ class Map3D extends Component {
             onChange={this.opacityChange.bind(this)}
             ref={(input) => this.input = input}
             />
-            <br></br>
+            <br></br><br></br>
             <button onClick={this.handleExtrude.bind(this)}>
             EXTRUDE SELECTED
-            </button> <br></br>
+            </button> <br></br><br></br>
             <p>Height</p>
             {draw_height}
             <br></br>
@@ -257,10 +259,14 @@ class Map3D extends Component {
             step="3"
             onChange={this.extrudeBaseChange.bind(this)}
             ref={(input) => this.input = input}
-            />
+            /><br></br>
+            <p>Colour Picker</p>
             <CirclePicker
             onChangeComplete={ this.colourChange }
-            />
+            /><br></br>
+            <button onClick={this.handleGist.bind(this)}>
+            SAVE BUILDING
+            </button>
             </Col>
             </Row>
             <Row id='controlcontainer'>
