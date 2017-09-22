@@ -7,7 +7,9 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import geojson from "./GeoJSON/minicity2d.js";
 import geojsonMatch from "./GeoJSON/minicity3d.js";
-import SiteInfo from './../Functions/siteInfo.js'
+import SiteInfo from './../Functions/siteInfo.js';
+//import area from './../turf_area.min.js';
+import { area } from '@turf/turf';
 
 const containerStyle = {
   height: "70vh"
@@ -108,6 +110,8 @@ class Map3D extends Component {
   handleExtrude(e){
     var draw_geojson = this.drawControl.draw.getSelected();
     this.setState({draw: draw_geojson})
+    var draw_area = area(draw_geojson);
+    console.log(draw_area)
   }
 
   opacityChange(event) {
