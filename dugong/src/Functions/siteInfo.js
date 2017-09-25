@@ -66,9 +66,10 @@ class SiteInfo extends Component {
           <br></br>
 
 
-          <p>Area of floor: {this.props.F_area}<br></br>
+          <p>
 
-          Area of building: {this.props.F_areaB}<br></br>
+          Gross Floor Area (GFA): {this.props.F_areaB}<br></br>
+          Gross Building Area (GBA): {this.props.F_GBA}<br></br>
 
           
           No. of apartments

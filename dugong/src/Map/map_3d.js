@@ -45,7 +45,7 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, toggle: true, gist: " ", feaso_HOB: " ", feaso_level: " ", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: " ", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
+    this.state = {filter: filteredGeojson, toggle: true, gist: " ", feaso_GBA: "", feaso_HOB: " ", feaso_level: " ", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: " ", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
     this.opacityChange = this.opacityChange.bind(this);
     this.extrudeChange = this.extrudeChange.bind(this);
     this.extrudeBaseChange = this.extrudeBaseChange.bind(this);
@@ -127,10 +127,17 @@ class Map3D extends Component {
     var levels = event.target.value/3;
     var draw_area = area(this.state.draw);
     var rounded_area = Math.round(draw_area*100)/100;
+
     var level_area = rounded_area*levels;
+    var level_area = Math.round(level_area*100)/100;
+
     var feaso_FSR = level_area/rounded_area;
-    console.log(feaso_FSR)
-    this.setState({draw_height:event.target.value, feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
+    var feaso_FSR = Math.round(feaso_FSR*100)/100;
+
+    var feaso_GBA = level_area*0.8;
+    var feaso_GBA = Math.round(feaso_GBA*100)/100;
+    
+    this.setState({draw_height:event.target.value, feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
   }
 
   extrudeBaseChange(event){
@@ -330,6 +337,7 @@ gist.create({
             F_area={this.state.feaso_area}
             F_FSR={this.state.feaso_FSR}
             F_areaB={this.state.feaso_areabuilding}
+            F_GBA={this.state.feaso_GBA}
             />
             
             </Row>
