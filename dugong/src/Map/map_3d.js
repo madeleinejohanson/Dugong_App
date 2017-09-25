@@ -10,6 +10,7 @@ import geojsonMatch from "./GeoJSON/minicity3d.js";
 import SiteInfo from './../Functions/siteInfo.js';
 //import area from './../turf_area.min.js';
 import { area } from '@turf/turf';
+import GitHub from 'github-api';
 
 const containerStyle = {
   height: "70vh"
@@ -45,11 +46,12 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, toggle: true, feaso_HOB: " ", feaso_level: " ", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: " ", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " "};
+    this.state = {filter: filteredGeojson, toggle: true, gist: "hello", feaso_HOB: " ", feaso_level: " ", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: " ", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " "};
     this.opacityChange = this.opacityChange.bind(this);
     this.extrudeChange = this.extrudeChange.bind(this);
     this.extrudeBaseChange = this.extrudeBaseChange.bind(this);
     this.colourChange = this.colourChange.bind(this);
+    this.handleGist = this.handleGist.bind(this);
   }
 //sets map position so map doesnt refresh
     componentWillMount() {
@@ -108,7 +110,7 @@ class Map3D extends Component {
   }
 
   handleExtrude(e){
-    var draw_geojson = this.drawControl.draw.getSelected();
+    const draw_geojson = this.drawControl.draw.getSelected();
     this.setState({draw: draw_geojson})
     var draw_area = area(draw_geojson);
     var rounded_area = Math.round(draw_area*100)/100;
@@ -136,14 +138,45 @@ class Map3D extends Component {
   };
 
   handleGist(e){
-    console.log("saved ya building!")
-  }
+var gh = new GitHub({
+   username: 'madeleinejohanson',
+   password: 'Arag0rn111'
+   /* also acceptable:
+      token: 'MY_OAUTH_TOKEN'
+    */
+});
+var gist = gh.getGist(); 
+// not a gist yet
+var retrievedGist = "global af"
+var self = this;
+gist.create({
+   public: true,
+   description: 'Dugong',
+   files: {
+      "mybuiding.geojson": {
+         content: JSON.stringify(this.state.draw)
+      }
+   }
+}).then(function({data}) {
+   // Promises!
+   var createdGist = data;
+   return gist.read();
+
+}).then(function({data}) {
+   retrievedGist = data;
+   retrievedGist = String(retrievedGist.html_url)
+   console.log(retrievedGist)
+   self.setState({ gist: retrievedGist });
+});
+}
 
     render () {
         var opacity = parseFloat(this.state.opacity)
+        var draw = String(this.state.draw)
         var draw_height = parseFloat(this.state.draw_height)
         var draw_baseHeight = parseFloat(this.state.draw_baseHeight)
         var draw_colour = String(this.state.draw_colour)
+        var gist_url = String(this.state.gist)
         return (
             <div>
             <Row id='mapcontainer' className="show-grid">
@@ -275,7 +308,8 @@ class Map3D extends Component {
             /><br></br>
             <button onClick={this.handleGist.bind(this)}>
             SAVE BUILDING
-            </button>
+            </button> <br></br>
+            {gist_url}
             </Col>
             </Row>
             <Row id='controlcontainer'>
