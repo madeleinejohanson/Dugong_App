@@ -6,7 +6,7 @@ import { CirclePicker } from 'react-color';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import geojson from "./GeoJSON/minicity2d.js";
-import geojsonMatch from "./GeoJSON/minicity3d_3.js";
+import geojsonMatch from "./GeoJSON/minicity3d.js";
 import SiteInfo from './../Functions/siteInfo.js';
 import { area } from '@turf/turf';
 import GitHub from 'github-api';
@@ -128,9 +128,7 @@ class Map3D extends Component {
     var draw_area = area(this.state.draw);
     var rounded_area = Math.round(draw_area*100)/100;
     var level_area = rounded_area*levels;
-    var feaso_FSR = level_area/rounded_area;
-    console.log(feaso_FSR)
-    this.setState({draw_height:event.target.value, feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
+    this.setState({draw_height:event.target.value, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
   }
 
   extrudeBaseChange(event){

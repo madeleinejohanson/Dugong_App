@@ -1,69 +1,79 @@
 import React, { Component } from "react";
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/DropdownButton';
 import Map3D from './../Map/map_3d.js';
 
 class SiteInfo extends Component {
 
   render() {
           var F_HOB = parseInt(this.props.F_HOB);
-          var SI_height = parseInt(this.props.SI_height);
+          var SI_HOB = parseInt(this.props.SI_HOB);
           var F_level = parseInt(this.props.F_level);
           var F_levelx3 = F_level*3;
+          var SI_FSR = parseInt(this.props.SI_FSR);
+          var F_FSR = parseInt(this.props.F_FSR);
           
 
           const redStyle = {
           color: 'red'
           };
 
-          const blueStyle = {
-          color: 'blue'
+          const blackStyle = {
+          color: 'black'
           };
 
     return (
           <div>
           <Col xs={6} md={4}>
-          <h4>Site Info</h4>
-          <p>Important stuff here<br></br>{this.props.stuff}<br></br>
-          ID: {this.props.SI_id}<br></br>
-          Height: {this.props.SI_height}<br></br>
-          Base Height: {this.props.SI_baseHeight}<br></br>
-          Colour: {this.props.SI_colour}
-          <br></br><br></br>
-          Lot number: <br></br>
-          Council:<br></br>
-          HOB: <br></br>
-          FSR:<br></br>
-          Zoning:<br></br>
-          Heritage:<br></br>
+          <h4>Site Info</h4> 
+          <p>
+          Lot number: {this.props.SI_id}<br></br>
+          Council: {this.props.SI_council}<br></br>
+          HOB: {this.props.SI_HOB}<br></br>
+          FSR: {this.props.SI_FSR}<br></br>
+          Land use: {this.props.SI_landuse}<br></br>
+          Heritage: {this.props.SI_heritage}<br></br>
           </p>
           </Col>
           <Col xs={6} md={4}>
           <h4>Feaso</h4>
          
           <p>Height of building: </p>
-          {F_HOB>SI_height ?
+          {F_HOB>SI_HOB ?
             <div style={redStyle}> {this.props.F_HOB} </div>
             :
-            <div style={blueStyle}> {this.props.F_HOB} </div>
+            <div style={blackStyle}> {this.props.F_HOB} </div>
           }
           <br></br>
 
 
           <p>Levels of building: </p>
-          {F_levelx3>SI_height ?
+          {F_levelx3>SI_HOB ?
           <div style={redStyle}> {this.props.F_level} </div>
           :
-          <div style={blueStyle}> {this.props.F_level} </div>
+          <div style={blackStyle}> {this.props.F_level} </div>
+          }
+          <br></br>
+
+          <p>FSR: </p>
+          {F_FSR>SI_FSR ?
+          <div style={redStyle}> {this.props.F_FSR} </div>
+          :
+          <div style={blackStyle}> {this.props.F_FSR} </div>
           }
           <br></br>
 
 
-
           <p>Area of floor: {this.props.F_area}<br></br>
+
           Area of building: {this.props.F_areaB}<br></br>
-          FSR: {this.props.F_FSR}<br></br>
-          No. of apartments<br></br>
+
+          
+          No. of apartments
+          <br></br>
+
           Approx build cost<br></br>
           </p>
           </Col>
