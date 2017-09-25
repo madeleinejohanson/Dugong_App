@@ -112,11 +112,6 @@ class Map3D extends Component {
   handleExtrude(e){
     const draw_geojson = this.drawControl.draw.getSelected();
     this.setState({draw: draw_geojson})
-    var draw_area = area(draw_geojson);
-    var rounded_area = Math.round(draw_area*100)/100;
-    var lvl = parseFloat(this.state.feaso_level)
-    var level_area = rounded_area*lvl;
-    this.setState({feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2",})
   }
 
   opacityChange(event) {
@@ -126,7 +121,10 @@ class Map3D extends Component {
   extrudeChange(event){
     this.setState({draw_height:event.target.value})
     var levels = event.target.value/3;
-    this.setState({draw_height:event.target.value, feaso_level: levels})
+    var draw_area = area(this.state.draw);
+    var rounded_area = Math.round(draw_area*100)/100;
+    var level_area = rounded_area*levels;
+    this.setState({draw_height:event.target.value, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
   }
 
   extrudeBaseChange(event){
