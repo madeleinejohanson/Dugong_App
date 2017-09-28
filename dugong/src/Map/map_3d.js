@@ -45,7 +45,7 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, toggle: true, gist: " ", feaso_GBA: "", feaso_HOB: " ", feaso_level: " ", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: " ", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
+    this.state = {filter: filteredGeojson, toggle: true, gist: " ", feaso_GBA: "", feaso_HOB: " ", feaso_level: "0", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: "0", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
     this.opacityChange = this.opacityChange.bind(this);
     this.extrudeChange = this.extrudeChange.bind(this);
     this.extrudeBaseChange = this.extrudeBaseChange.bind(this);
@@ -262,6 +262,21 @@ gist.create({
                 />
 
             </Map>
+            <SiteInfo 
+            stuff={this.state.string}
+            SI_id={this.state.siteInfo_ID}
+            SI_HOB={this.state.siteInfo_HOB}
+            SI_FSR={this.state.siteInfo_FSR}
+            SI_council={this.state.siteInfo_council}
+            SI_heritage={this.state.siteInfo_heritage}
+            SI_landuse={this.state.siteInfo_landuse}
+            F_HOB={this.state.draw_height}
+            F_level={this.state.feaso_level}
+            F_area={this.state.feaso_area}
+            F_FSR={this.state.feaso_FSR}
+            F_areaB={this.state.feaso_areabuilding}
+            F_GBA={this.state.feaso_GBA}
+            />
             </Col>
             <Col xs={6} md={2}> 
             <h3>User Controls</h3><br></br>
@@ -323,25 +338,6 @@ gist.create({
             {gist_url}
             </Col>
             </Row>
-            <Row id='controlcontainer'>
-            <SiteInfo 
-            stuff={this.state.string}
-            SI_id={this.state.siteInfo_ID}
-            SI_HOB={this.state.siteInfo_HOB}
-            SI_FSR={this.state.siteInfo_FSR}
-            SI_council={this.state.siteInfo_council}
-            SI_heritage={this.state.siteInfo_heritage}
-            SI_landuse={this.state.siteInfo_landuse}
-            F_HOB={this.state.draw_height}
-            F_level={this.state.feaso_level}
-            F_area={this.state.feaso_area}
-            F_FSR={this.state.feaso_FSR}
-            F_areaB={this.state.feaso_areabuilding}
-            F_GBA={this.state.feaso_GBA}
-            />
-            
-            </Row>
-
             </div>
         );
     }
