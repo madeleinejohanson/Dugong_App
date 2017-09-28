@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
-import DropdownButton from 'react-bootstrap/lib/DropdownButton';
-import MenuItem from 'react-bootstrap/lib/DropdownButton';
+import {Row} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
+import {DropdownButton} from 'react-bootstrap';
+import {MenuItem} from 'react-bootstrap';
 import Map3D from './../Map/map_3d.js';
 
 class SiteInfo extends Component {
@@ -40,22 +40,21 @@ class SiteInfo extends Component {
           <Col xs={6} md={4}>
           <h4>Feaso</h4>
          
-          <p>Height of building: </p>
-          {F_HOB>SI_HOB ?
+          <p>Height of Building: </p> {F_HOB>SI_HOB ?
             <div style={redStyle}> {this.props.F_HOB} </div>
             :
             <div style={blackStyle}> {this.props.F_HOB} </div>
           }
-          <br></br>
+          
 
 
-          <p>Levels of building: </p>
+          <p>Levels of Building: </p>
           {F_levelx3>SI_HOB ?
           <div style={redStyle}> {this.props.F_level} </div>
           :
           <div style={blackStyle}> {this.props.F_level} </div>
           }
-          <br></br>
+          
 
           <p>FSR: </p>
           {F_FSR>SI_FSR ?
@@ -63,7 +62,7 @@ class SiteInfo extends Component {
           :
           <div style={blackStyle}> {this.props.F_FSR} </div>
           }
-          <br></br>
+          
 
 
           <p>

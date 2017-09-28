@@ -3,8 +3,8 @@ import ReactMapboxGl, { Layer , GeoJSONLayer, ScaleControl} from "react-mapbox-g
 import DrawControl from 'react-mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import { CirclePicker } from 'react-color';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import {Row} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
 import geojson from "./GeoJSON/minicity2d.js";
 import geojsonMatch from "./GeoJSON/minicity3d_3.js";
 import SiteInfo from './../Functions/siteInfo.js';

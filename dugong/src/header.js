@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import 'bootstrap/dist/css/bootstrap.css';
-import Navbar from 'react-bootstrap/lib/Navbar';
-import Nav from 'react-bootstrap/lib/Nav';
+//import 'bootstrap/dist/css/bootstrap.css';
+import {Nav} from 'react-bootstrap';
 import dugong from'./dugong.ico';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import {Row} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
 // import Nav from 'react-bootstrap/lib/Nav';
 // import Button from 'react-bootstrap/lib/Button';
 

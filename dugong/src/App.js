@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import HeaderNavigation from './Navigation/header.js';
 import Map3D from './Map/map_3d.js';
 import SiteInfo from './Functions/siteInfo.js';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import {Row} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
 
 
 function App() {
