@@ -70,12 +70,7 @@ class SiteInfo extends Component {
 
           Gross Floor Area (GFA): {this.props.F_areaB}<br></br>
           Gross Building Area (GBA): {this.props.F_GBA}<br></br>
-
           
-          No. of apartments
-          <br></br>
-
-          Approx build cost<br></br>
           </p>
           </Col>
 
