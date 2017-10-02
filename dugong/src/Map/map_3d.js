@@ -150,8 +150,8 @@ class Map3D extends Component {
 
   handleGist(e){
 var gh = new GitHub({
-   username: 'madeleinejohanson',
-   token: '627a1e4c25d3c256c38d115ea007e0466138fb5c'
+   username: 'Dugongg',
+   password: 'nazmulisnumber1'
    /* also acceptable:
       token: 'MY_OAUTH_TOKEN'
     */
