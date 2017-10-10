@@ -115,6 +115,8 @@ class Map3D extends Component {
 
   handleExtrude(e){
     const draw_geojson = this.drawControl.draw.getSelected();
+    const draw_id = this.drawControl.draw.getSelectedIds();
+    console.log(draw_id);
     this.setState({draw: draw_geojson})
   }
 
@@ -188,6 +190,15 @@ gist.create({
         var draw_baseHeight = parseFloat(this.state.draw_baseHeight)
         var draw_colour = String(this.state.draw_colour)
         var gist_url = String(this.state.gist)
+
+        // make state building, geojson with multiple features each of which is a section. WHen you select
+        // one of them and change the sliders it updates the right bit of the geoson. The geojson has a feature
+        // id which is made by mapbox draw
+        // add property to that geojson height, base_height and read off directly
+        // function(e.height){
+        //     building[filtered by current id].properties.height = e.height
+        // }
+
         return (
             <div>
             <Row id='mapcontainer' className="show-grid">
