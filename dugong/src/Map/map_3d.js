@@ -117,9 +117,9 @@ class Map3D extends Component {
   }
 
   handleExtrude(e){
-    const draw_geojson = this.drawControl.draw.getSelected();
+    const draw_geojson = this.drawControl.draw.getAll();
     const draw_id = this.drawControl.draw.getSelectedIds();
-    var noOfId = draw_id.length
+    var noOfId = draw_geojson.features.length
     noOfId = noOfId - 1;
     //var count = "";
     var i;
@@ -140,26 +140,36 @@ class Map3D extends Component {
   }
 
   extrudeChange(event){
-    const newState = this.state.drawnBuilding;
     const height_slide = parseFloat(event.target.value);
 
-    const sel_id = this.drawControl.draw.getSelectedIds();
-
+    this.setState({draw_height:height_slide, feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
+   
+    const draw_geojson = this.drawControl.draw.getAll();
+    const draw_id = this.drawControl.draw.getSelectedIds();
+    var noOfId = draw_geojson.features.length
+    noOfId = noOfId - 1;
+    //var count = "";
     var i;
-    var j;
-    for (i = 0; i <= sel_id.length; i++) {
-        for (j=0;j<=newState.features.length;j++){
-            if (sel_id[i] == newState.features[j]){
-                newState.features[i].properties.height = height_slide; 
-                //console.log(JSON.stringify(newState))
-                return newState;
-            }
-        }
+    for (i = 0; i <= noOfId; i++) {
+    draw_geojson.features[i].properties = {"height":height_slide,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
     }
+
+    this.setState({drawnBuilding: draw_geojson});
+    //console.log(JSON.stringify(this.state.drawnBuilding));
+    //console.log(count)
+
+    // var i;
+    // var j;
+    // for (i = 0; i <= sel_id.length; i++) {
+    //     for (j=0;j<=newState.features.length;j++){
+    //         if (sel_id[i] == newState.features[j]){
+    //             newState.features[0].properties.height = height_slide; 
+    //             //console.log(JSON.stringify(newState))
+    //             return newState;
+    //         }
+    //     }
+    // }
     //newState.features[0].properties.height = parseFloat(event.target.value);
-
-    //console.log(JSON.stringify(newState))
-
 
     var levels = event.target.value/3;
     var draw_area = area(this.state.draw);
@@ -174,21 +184,42 @@ class Map3D extends Component {
     var feaso_GBA = level_area*0.8;
     var feaso_GBA = Math.round(feaso_GBA*100)/100;
     
-    this.setState({draw_height:height_slide, drawnBuilding: newState,feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
   }
 
   extrudeBaseChange(event){
-    const newState = this.state.drawnBuilding;
-    newState.features[0].properties.base_height = parseFloat(event.target.value);
-    this.setState({draw_baseHeight:event.target.value, drawnBuilding: newState})
-    console.log(JSON.stringify(this.state.drawnBuilding));
+    const draw_geojson = this.drawControl.draw.getAll();
+    const draw_id = this.drawControl.draw.getSelectedIds();
+    const bHeight = parseFloat(event.target.value);
+    var noOfId = draw_geojson.features.length
+    noOfId = noOfId - 1;
+    //var count = "";
+    var i;
+    for (i = 0; i <= noOfId; i++) {
+    draw_geojson.features[i].properties = {"height":this.state.draw_height,"base_height":bHeight,"colour":this.state.draw_colour};
+    }
+    //count = count.substr(1).slice(0, -1);
+
+    //draw_geojson.features[count].properties = {"height":this.state.draw_height,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
+
+    //console.log(JSON.stringify(this.state.drawnBuilding));
+    //console.log(count)
+    this.setState({draw_baseHeight:bHeight, drawnBuilding: draw_geojson})
+    //console.log(JSON.stringify(this.state.drawnBuilding));
+
   }
 
   colourChange = (color) => {
-    const newState = this.state.drawnBuilding;
-    newState.features[0].properties.colour = color.hex;
-    this.setState({ draw_colour: color.hex, drawnBuilding: newState});
-    console.log(JSON.stringify(this.state.drawnBuilding));
+const draw_geojson = this.drawControl.draw.getAll();
+    const draw_id = this.drawControl.draw.getSelectedIds();
+    var noOfId = draw_geojson.features.length
+    noOfId = noOfId - 1;
+    //var count = "";
+    var i;
+    for (i = 0; i <= noOfId; i++) {
+    draw_geojson.features[i].properties = {"height":this.state.draw_height,"base_height":this.state.draw_baseHeight,"colour":color.hex};
+    }
+    this.setState({ draw_colour: color.hex, drawnBuilding: draw_geojson});
+    //console.log(JSON.stringify(this.state.drawnBuilding));
   };
 
   handleGist(e){
