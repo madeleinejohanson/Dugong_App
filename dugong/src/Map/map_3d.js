@@ -118,7 +118,6 @@ class Map3D extends Component {
 
   handleExtrude(e){
     const draw_geojson = this.drawControl.draw.getAll();
-    const draw_id = this.drawControl.draw.getSelectedIds();
     var noOfId = draw_geojson.features.length
     noOfId = noOfId - 1;
     //var count = "";
@@ -144,17 +143,36 @@ class Map3D extends Component {
 
     this.setState({draw_height:height_slide, feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
    
-    const draw_geojson = this.drawControl.draw.getAll();
-    const draw_id = this.drawControl.draw.getSelectedIds();
-    var noOfId = draw_geojson.features.length
-    noOfId = noOfId - 1;
-    //var count = "";
-    var i;
-    for (i = 0; i <= noOfId; i++) {
-    draw_geojson.features[i].properties = {"height":height_slide,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
-    }
+    var draw_geojson1 = this.state.drawnBuilding;
+    //console.log(draw_geojson)
+    var draw_id = this.drawControl.draw.getSelectedIds();
+    draw_id = draw_id[0]
+    draw_id = draw_id.toString();
 
-    this.setState({drawnBuilding: draw_geojson});
+    var i;
+    for (i=0; i<draw_geojson1.features.length; i++){
+        if (draw_id == draw_geojson1.features[i].id){
+             draw_geojson1.features[i].properties = {"height":height_slide,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
+            //return draw_geojson;
+            console.log(draw_geojson1)
+         }
+         else{
+            //return draw_geojson;
+            console.log(":(")
+         }
+    }
+    this.setState({drawnBuilding: draw_geojson1});
+
+    console.log(this.state.drawnBuilding)
+
+    // var noOfId = draw_geojson.features.length
+    // noOfId = noOfId - 1;
+    // //var count = "";
+    // var i;
+    // for (i = 0; i <= noOfId; i++) {
+    // draw_geojson.features[i].properties = {"height":height_slide,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
+    // }
+
     //console.log(JSON.stringify(this.state.drawnBuilding));
     //console.log(count)
 
@@ -187,15 +205,23 @@ class Map3D extends Component {
   }
 
   extrudeBaseChange(event){
-    const draw_geojson = this.drawControl.draw.getAll();
-    const draw_id = this.drawControl.draw.getSelectedIds();
     const bHeight = parseFloat(event.target.value);
-    var noOfId = draw_geojson.features.length
-    noOfId = noOfId - 1;
-    //var count = "";
+    var draw_geojson2 = this.state.drawnBuilding;
+    var draw_id = this.drawControl.draw.getSelectedIds();
+    draw_id = draw_id[0]
+    draw_id = draw_id.toString();
+
     var i;
-    for (i = 0; i <= noOfId; i++) {
-    draw_geojson.features[i].properties = {"height":this.state.draw_height,"base_height":bHeight,"colour":this.state.draw_colour};
+    for (i=0; i<draw_geojson2.features.length; i++){
+        if (draw_id == draw_geojson2.features[i].id){
+             draw_geojson2.features[i].properties = {"height":this.state.draw_height,"base_height":bHeight,"colour":this.state.draw_colour};
+            //return draw_geojson;
+            console.log(draw_geojson2)
+         }
+         else{
+            //return draw_geojson;
+            console.log(":(")
+         }
     }
     //count = count.substr(1).slice(0, -1);
 
@@ -203,22 +229,30 @@ class Map3D extends Component {
 
     //console.log(JSON.stringify(this.state.drawnBuilding));
     //console.log(count)
-    this.setState({draw_baseHeight:bHeight, drawnBuilding: draw_geojson})
+    this.setState({draw_baseHeight:bHeight, drawnBuilding: draw_geojson2})
     //console.log(JSON.stringify(this.state.drawnBuilding));
 
   }
 
   colourChange = (color) => {
-const draw_geojson = this.drawControl.draw.getAll();
-    const draw_id = this.drawControl.draw.getSelectedIds();
-    var noOfId = draw_geojson.features.length
-    noOfId = noOfId - 1;
-    //var count = "";
+    var draw_geojson3 = this.state.drawnBuilding;
+    var draw_id = this.drawControl.draw.getSelectedIds();
+    draw_id = draw_id[0]
+    draw_id = draw_id.toString();
+
     var i;
-    for (i = 0; i <= noOfId; i++) {
-    draw_geojson.features[i].properties = {"height":this.state.draw_height,"base_height":this.state.draw_baseHeight,"colour":color.hex};
+    for (i=0; i<draw_geojson3.features.length; i++){
+        if (draw_id == draw_geojson3.features[i].id){
+             draw_geojson3.features[i].properties = {"height":this.state.draw_height,"base_height":this.state.draw_baseHeight,"colour":color.hex};
+            //return draw_geojson;
+            //console.log(draw_geojson3)
+         }
+         else{
+            //return draw_geojson;
+            //console.log(":(")
+         }
     }
-    this.setState({ draw_colour: color.hex, drawnBuilding: draw_geojson});
+    this.setState({ draw_colour: color.hex, drawnBuilding: draw_geojson3});
     //console.log(JSON.stringify(this.state.drawnBuilding));
   };
 
