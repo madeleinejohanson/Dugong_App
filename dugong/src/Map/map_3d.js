@@ -35,6 +35,9 @@ var filteredGeojson = {"type":"FeatureCollection","features":[{"type":"Feature",
   [151.205307631595,-33.8718573721096],[151.205527141532,-33.8718452797009],[151.205513803131,-33.871713060999],
   [151.205292222514,-33.8717258167423]]]},"properties":{"id":"0","height":20,"base_height":0,"colour":"#5d6eb6"}}]};
 
+var drawnGeojson = {"type":"FeatureCollection","features":[{"id":"cc3f3de5a7d59ee9b27518a13fa65d2e","type":"Feature","properties":{"height":20,"base_height":0,"colour":"#5d6eb6"},"geometry":{"coordinates":[[[151.20851775060197,-33.87031814681491],[151.20848746189426,-33.871055199345335],[151.2088702693323,-33.871149221211155],[151.20925457742692,-33.87096649989355],[151.20928897260177,-33.870282586597284],[151.20889822536424,-33.869995409026224],[151.20851775060197,-33.87031814681491]]],"type":"Polygon"}}]} 
+
+
 const Map = ReactMapboxGl({
   accessToken:'pk.eyJ1IjoibWFkZWxlaW5lam9oYW5zb24iLCJhIjoiY2lzczduYzJ4MDZrODJucGh0Mm1xbmVxNCJ9.i7q4iT8FFgh_y5v4we5UhQ'
 });
@@ -45,7 +48,7 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, toggle: true, gist: " ", feaso_GBA: "", feaso_HOB: " ", feaso_level: "0", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: "0", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
+    this.state = {filter: filteredGeojson, drawnBuilding: drawnGeojson, toggle: true, gist: " ", feaso_GBA: "", feaso_HOB: " ", feaso_level: "0", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: "0", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
     this.opacityChange = this.opacityChange.bind(this);
     this.extrudeChange = this.extrudeChange.bind(this);
     this.extrudeBaseChange = this.extrudeBaseChange.bind(this);
@@ -116,8 +119,20 @@ class Map3D extends Component {
   handleExtrude(e){
     const draw_geojson = this.drawControl.draw.getSelected();
     const draw_id = this.drawControl.draw.getSelectedIds();
-    console.log(draw_id);
-    this.setState({draw: draw_geojson})
+    var noOfId = draw_id.length
+    noOfId = noOfId - 1;
+    //var count = "";
+    var i;
+    for (i = 0; i <= noOfId; i++) {
+    draw_geojson.features[i].properties = {"height":this.state.draw_height,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
+    }
+    //count = count.substr(1).slice(0, -1);
+
+    //draw_geojson.features[count].properties = {"height":this.state.draw_height,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
+
+    this.setState({drawnBuilding: draw_geojson});
+    //console.log(JSON.stringify(this.state.drawnBuilding));
+    //console.log(count)
   }
 
   opacityChange(event) {
@@ -125,7 +140,27 @@ class Map3D extends Component {
   }
 
   extrudeChange(event){
-    this.setState({draw_height:event.target.value})
+    const newState = this.state.drawnBuilding;
+    const height_slide = parseFloat(event.target.value);
+
+    const sel_id = this.drawControl.draw.getSelectedIds();
+
+    var i;
+    var j;
+    for (i = 0; i <= sel_id.length; i++) {
+        for (j=0;j<=newState.features.length;j++){
+            if (sel_id[i] == newState.features[j]){
+                newState.features[i].properties.height = height_slide; 
+                //console.log(JSON.stringify(newState))
+                return newState;
+            }
+        }
+    }
+    //newState.features[0].properties.height = parseFloat(event.target.value);
+
+    //console.log(JSON.stringify(newState))
+
+
     var levels = event.target.value/3;
     var draw_area = area(this.state.draw);
     var rounded_area = Math.round(draw_area*100)/100;
@@ -139,15 +174,21 @@ class Map3D extends Component {
     var feaso_GBA = level_area*0.8;
     var feaso_GBA = Math.round(feaso_GBA*100)/100;
     
-    this.setState({draw_height:event.target.value, feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
+    this.setState({draw_height:height_slide, drawnBuilding: newState,feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
   }
 
   extrudeBaseChange(event){
-    this.setState({draw_baseHeight:event.target.value})
+    const newState = this.state.drawnBuilding;
+    newState.features[0].properties.base_height = parseFloat(event.target.value);
+    this.setState({draw_baseHeight:event.target.value, drawnBuilding: newState})
+    console.log(JSON.stringify(this.state.drawnBuilding));
   }
 
   colourChange = (color) => {
-    this.setState({ draw_colour: color.hex });
+    const newState = this.state.drawnBuilding;
+    newState.features[0].properties.colour = color.hex;
+    this.setState({ draw_colour: color.hex, drawnBuilding: newState});
+    console.log(JSON.stringify(this.state.drawnBuilding));
   };
 
   handleGist(e){
@@ -167,7 +208,7 @@ gist.create({
    description: 'Dugong',
    files: {
       "mybuiding.geojson": {
-         content: JSON.stringify(this.state.draw)
+         content: JSON.stringify(this.state.drawnBuilding)
       }
    }
 }).then(function({data}) {
@@ -184,12 +225,15 @@ gist.create({
 }
 
     render () {
+        console.log(this.state.drawnBuilding)
+
         var opacity = parseFloat(this.state.opacity)
         var draw = String(this.state.draw)
         var draw_height = parseFloat(this.state.draw_height)
         var draw_baseHeight = parseFloat(this.state.draw_baseHeight)
         var draw_colour = String(this.state.draw_colour)
         var gist_url = String(this.state.gist)
+        //var drawnBuilding = this.state.drawnBuilding
 
         // make state building, geojson with multiple features each of which is a section. WHen you select
         // one of them and change the sliders it updates the right bit of the geoson. The geojson has a feature
@@ -240,6 +284,7 @@ gist.create({
                         'property': 'base_height'
                     }
                   }}
+                //fillExtrusionOnClick
                 />
                 <GeoJSONLayer
                 id="filtered_Geojson"
@@ -262,13 +307,20 @@ gist.create({
                 />
                 <GeoJSONLayer
                 id="draw_layer"
-                data={this.state.draw}
+                data={this.state.drawnBuilding}
                 fillExtrusionPaint={{
-                'fill-extrusion-color': draw_colour
-                    ,
-                    'fill-extrusion-height': draw_height
-                    ,
-                    'fill-extrusion-base': draw_baseHeight
+                    'fill-extrusion-color': {
+                      'type': 'identity',
+                      'property': 'colour'
+                    },
+                    'fill-extrusion-height': {
+                        'type': 'identity',
+                        'property': 'height'
+                    },
+                    'fill-extrusion-base': {
+                        'type': 'identity',
+                        'property': 'base_height'
+                    }
                   }}
                 />
 
