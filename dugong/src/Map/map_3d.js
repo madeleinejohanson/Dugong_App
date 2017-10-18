@@ -48,7 +48,7 @@ class Map3D extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {filter: filteredGeojson, drawnBuilding: drawnGeojson, toggle: true, gist: " ", feaso_GBA: "", feaso_HOB: " ", feaso_level: "0", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: "0", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
+    this.state = {filter_area: "", filter: filteredGeojson, drawnBuilding: drawnGeojson, toggle: true, gist: " ", feaso_GBA: "", feaso_HOB: " ", feaso_level: "0", feaso_area: " ", feaso_areabuilding: " ", feaso_FSR: "0", draw: filteredGeojson, draw_colour:"#5d6eb6", draw_height: 0, draw_baseHeight: 0, opacity:0.5, siteInfo_ID: " ", siteInfo_height: " ", siteInfo_baseHeight: " ", siteInfo_colour: " ", siteInfo_HOB: " ", siteInfo_FSR: " ", siteInfo_council:" ", siteInfo_heritage:" ", siteInfo_landuse: " "};
     this.opacityChange = this.opacityChange.bind(this);
     this.extrudeChange = this.extrudeChange.bind(this);
     this.extrudeBaseChange = this.extrudeBaseChange.bind(this);
@@ -57,7 +57,7 @@ class Map3D extends Component {
   }
 //sets map position so map doesnt refresh
     componentWillMount() {
-     this.setState({ zoom: [15], center: [151.2049, -33.8687], pitch: 45, bearing: -17.6 });
+     this.setState({ zoom: [14], center: [151.2049, -33.8687], pitch: 45, bearing: -17.6 });
   }
   // _onStyleLoad = (map, event) => {
   //   var Draw = MapboxDraw;
@@ -148,7 +148,6 @@ class Map3D extends Component {
     const height_slide = parseFloat(event.target.value);
     const clonedBuilding = JSON.parse(JSON.stringify(this.state.drawnBuilding))
 
-    this.setState({draw_height:height_slide, feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
    
     var draw_geojson1 = clonedBuilding;
     //console.log(draw_geojson)
@@ -161,58 +160,33 @@ class Map3D extends Component {
         if (draw_id == draw_geojson1.features[i].id){
              draw_geojson1.features[i].properties = {"height":height_slide,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
             //return draw_geojson;
-            console.log(draw_geojson1)
+            //console.log(draw_geojson1)
          }
          else{
             //return draw_geojson;
-            console.log(":(")
+            //console.log(":(")
          }
     }
-    this.setState({drawnBuilding: draw_geojson1});
-    this.forceUpdate()
-    // this.setState({drawnBuilding: drawnGeojson});
-    //this.map.getSource('draw_layer').setData(this.state.drawnBuilding)
-    // this.setState(this.state)
 
-     //this.map.getSource('draw_layer').setData(this.state.drawnBuilding);
-    
-    // var noOfId = draw_geojson.features.length
-    // noOfId = noOfId - 1;
-    // //var count = "";
-    // var i;
-    // for (i = 0; i <= noOfId; i++) {
-    // draw_geojson.features[i].properties = {"height":height_slide,"base_height":this.state.draw_baseHeight,"colour":this.state.draw_colour};
-    // }
 
-    //console.log(JSON.stringify(this.state.drawnBuilding));
-    //console.log(count)
-
-    // var i;
-    // var j;
-    // for (i = 0; i <= sel_id.length; i++) {
-    //     for (j=0;j<=newState.features.length;j++){
-    //         if (sel_id[i] == newState.features[j]){
-    //             newState.features[0].properties.height = height_slide; 
-    //             //console.log(JSON.stringify(newState))
-    //             return newState;
-    //         }
-    //     }
-    // }
-    //newState.features[0].properties.height = parseFloat(event.target.value);
-
-    var levels = event.target.value/3;
-    var draw_area = area(this.state.draw);
+    var levels = height_slide/3;
+    var draw_area = area(this.state.drawnBuilding);
     var rounded_area = Math.round(draw_area*100)/100;
+
+    var site_area = area(this.state.filter)
+    var rounded_site_area = Math.round(site_area*100)/100;
 
     var level_area = rounded_area*levels;
     var level_area = Math.round(level_area*100)/100;
 
-    var feaso_FSR = level_area/rounded_area;
+    var feaso_FSR = level_area/rounded_site_area;
     var feaso_FSR = Math.round(feaso_FSR*100)/100;
 
     var feaso_GBA = level_area*0.8;
     var feaso_GBA = Math.round(feaso_GBA*100)/100;
-    
+
+    console.log(level_area)
+    this.setState({filter_area: rounded_site_area,drawnBuilding: draw_geojson1, draw_height:height_slide, feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
   }
 
   extrudeBaseChange(event){
@@ -229,11 +203,11 @@ class Map3D extends Component {
         if (draw_id == draw_geojson2.features[i].id){
              draw_geojson2.features[i].properties = {"height":this.state.draw_height,"base_height":bHeight,"colour":this.state.draw_colour};
             //return draw_geojson;
-            console.log(draw_geojson2)
+            //console.log(draw_geojson2)
          }
          else{
             //return draw_geojson;
-            console.log(":(")
+            //console.log(":(")
          }
     }
     //count = count.substr(1).slice(0, -1);
@@ -305,7 +279,7 @@ gist.create({
 }
 
     render () {
-        console.log(this.state.drawnBuilding)
+        //console.log(this.state.drawnBuilding)
         var drawnBuildingVar = this.state.drawnBuilding
         var opacity = parseFloat(this.state.opacity)
         var draw = String(this.state.draw)
@@ -412,6 +386,9 @@ gist.create({
             SI_council={this.state.siteInfo_council}
             SI_heritage={this.state.siteInfo_heritage}
             SI_landuse={this.state.siteInfo_landuse}
+
+            SI_area={this.state.filter_area}
+
             F_HOB={this.state.draw_height}
             F_level={this.state.feaso_level}
             F_area={this.state.feaso_area}
@@ -421,7 +398,7 @@ gist.create({
             />
             </Col>
             <Col xs={6} md={2}> 
-            <h3>User Controls</h3><br></br>
+            <h2>Dugong</h2><br></br>
             <button onClick={this.handleClick.bind(this)}>
             {this.state.toggle ? 'SELECT SITE' : 'SELECT NEW SITE'}
             </button>
@@ -439,7 +416,7 @@ gist.create({
             onChange={this.opacityChange.bind(this)}
             ref={(input) => this.input = input}
             />
-            <br></br><br></br>
+            <br></br>
             <button onClick={this.handleExtrude.bind(this)}>
             EXTRUDE SELECTED
             </button> <br></br><br></br>

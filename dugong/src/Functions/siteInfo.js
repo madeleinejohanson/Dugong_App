@@ -13,8 +13,7 @@ class SiteInfo extends Component {
           var F_level = parseInt(this.props.F_level);
           var F_levelx3 = F_level*3;
           var SI_FSR = parseInt(this.props.SI_FSR);
-          var F_FSR = parseInt(this.props.F_FSR);
-          
+          var F_FSR = parseInt(this.props.F_FSR);          
 
           const redStyle = {
           color: 'red'
