@@ -59,12 +59,36 @@ class Map3D extends Component {
     componentWillMount() {
      this.setState({ zoom: [15], center: [151.2049, -33.8687], pitch: 45, bearing: -17.6 });
   }
-  // _onStyleLoad = (map, event) => {
-  //   var Draw = MapboxDraw;
-  //   //add source?
-  //   //add layers?
-  //   map.addControl(Draw)
-  // }
+
+ _onStyleLoad = (map, event) => {
+        //console.log('map', map, 'event: ', event, this.refs.map)
+        var Draw = MapboxDraw;
+        console.log(Draw)
+        map.addSource('loaded_geojson', {
+            type: 'geojson',
+            data: {geojson}
+        })
+        map.addLayer({
+            'id': 'building_footprints',
+            'type': 'fill-extrusion',
+            'source': 'loaded_geojson',
+            'paint': {
+                    'fill-extrusion-color': {
+                      'type': 'identity',
+                      'property': 'colour'
+                    },
+                    'fill-extrusion-height': {
+                        'type': 'identity',
+                        'property': 'height'
+                    },
+                    'fill-extrusion-base': {
+                        'type': 'identity',
+                        'property': 'base_height'
+                    }
+                  }
+        });
+        map.addControl(Draw)
+    }
 
 //FUNCTION THAT HAPPENS WHEN YOU CLICK ON THE MAP
   _onClickMap = (map, evt) => {
@@ -146,11 +170,10 @@ class Map3D extends Component {
 
   extrudeChange(event){
     const height_slide = parseFloat(event.target.value);
-    const clonedBuilding = JSON.parse(JSON.stringify(this.state.drawnBuilding))
 
     this.setState({draw_height:height_slide, feaso_GBA: feaso_GBA+"m2", feaso_FSR: feaso_FSR, feaso_level: levels, feaso_areabuilding:level_area+"m2", feaso_area:rounded_area+"m2"})
    
-    var draw_geojson1 = clonedBuilding;
+    var draw_geojson1 = this.state.drawnBuilding;
     //console.log(draw_geojson)
     var draw_id = this.drawControl.draw.getSelectedIds();
     draw_id = draw_id[0]
@@ -169,13 +192,10 @@ class Map3D extends Component {
          }
     }
     this.setState({drawnBuilding: draw_geojson1});
-    this.forceUpdate()
-    // this.setState({drawnBuilding: drawnGeojson});
     //this.map.getSource('draw_layer').setData(this.state.drawnBuilding)
-    // this.setState(this.state)
 
-     //this.map.getSource('draw_layer').setData(this.state.drawnBuilding);
-    
+    console.log(this.state.drawnBuilding)
+
     // var noOfId = draw_geojson.features.length
     // noOfId = noOfId - 1;
     // //var count = "";
@@ -217,9 +237,7 @@ class Map3D extends Component {
 
   extrudeBaseChange(event){
     const bHeight = parseFloat(event.target.value);
-    const clonedBuilding = JSON.parse(JSON.stringify(this.state.drawnBuilding))
-
-    var draw_geojson2 = clonedBuilding;
+    var draw_geojson2 = this.state.drawnBuilding;
     var draw_id = this.drawControl.draw.getSelectedIds();
     draw_id = draw_id[0]
     draw_id = draw_id.toString();
@@ -248,8 +266,7 @@ class Map3D extends Component {
   }
 
   colourChange = (color) => {
-    const clonedBuilding = JSON.parse(JSON.stringify(this.state.drawnBuilding))
-    var draw_geojson3 = clonedBuilding;
+    var draw_geojson3 = this.state.drawnBuilding;
     var draw_id = this.drawControl.draw.getSelectedIds();
     draw_id = draw_id[0]
     draw_id = draw_id.toString();
@@ -327,25 +344,25 @@ gist.create({
             <div>
             <Row id='mapcontainer' className="show-grid">
            <Col xs={12} md={9} > 
-            <Map
-                style='mapbox://styles/mapbox/streets-v9'
-                containerStyle={containerStyle} 
+            <ReactMapboxGL
+                style={containerStyle}
                 center={this.state.center}
-                zoom={this.state.zoom}
-                pitch={this.state.pitch}
-                bearing={this.state.bearing}
+                zoom={[13]}
+                accessToken={this.props.accessToken}
+                containerStyle={this.props.containerStyle}
+                onStyleLoad={this._onStyleLoad}
                 onClick={this._onClickMap}
-                //onStyleLoad={this._onStyleLoad}
-            > 
-                <DrawControl 
-                displayControlsDefault={false}
-                ref={(drawControl) => { this.drawControl = drawControl; }}
-                controls={{
-                "polygon" : true,
-                "trash" : true
-                }}
+                ref='map'
+            > </ReactMapboxGL>
+                // <DrawControl 
+                // displayControlsDefault={false}
+                // ref={(drawControl) => { this.drawControl = drawControl; }}
+                // controls={{
+                // "polygon" : true,
+                // "trash" : true
+                // }}
                 
-                />
+                // />
                 <ScaleControl position='bottomLeft'/>
                 <GeoJSONLayer
                   id="LOADED_GEOJSON"
@@ -402,8 +419,7 @@ gist.create({
                         'property': 'base_height'
                     }
                   }}
-                />
-            </Map>   
+                />   
             <SiteInfo 
             stuff={this.state.string}
             SI_id={this.state.siteInfo_ID}
