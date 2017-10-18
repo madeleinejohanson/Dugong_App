@@ -8,11 +8,8 @@ import {Col} from 'react-bootstrap';
 
 function App() {
   return (
-    <div style={{height:'100%'}}>
-      <HeaderNavigation/>  
+    <div style={{height:'100%'}}>  
           <Map3D/> 
-
-
     </div>
   );
 }

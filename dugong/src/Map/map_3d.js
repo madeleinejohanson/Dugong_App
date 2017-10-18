@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactMapboxGl, { Layer , GeoJSONLayer, ScaleControl} from "react-mapbox-gl";
+import ReactMapboxGl, { Layer , GeoJSONLayer, ScaleControl, ReactMapboxGL} from "react-mapbox-gl";
 import DrawControl from 'react-mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import { CirclePicker } from 'react-color';
@@ -59,6 +59,12 @@ class Map3D extends Component {
     componentWillMount() {
      this.setState({ zoom: [15], center: [151.2049, -33.8687], pitch: 45, bearing: -17.6 });
   }
+  // _onStyleLoad = (map, event) => {
+  //   var Draw = MapboxDraw;
+  //   //add source?
+  //   //add layers?
+  //   map.addControl(Draw)
+  // }
 
 //FUNCTION THAT HAPPENS WHEN YOU CLICK ON THE MAP
   _onClickMap = (map, evt) => {
@@ -162,6 +168,7 @@ class Map3D extends Component {
          }
     }
     this.setState({drawnBuilding: draw_geojson1});
+    //this.map.getSource('draw_layer').setData(this.state.drawnBuilding)
 
     console.log(this.state.drawnBuilding)
 
@@ -253,6 +260,7 @@ class Map3D extends Component {
          }
     }
     this.setState({ draw_colour: color.hex, drawnBuilding: draw_geojson3});
+
     //console.log(JSON.stringify(this.state.drawnBuilding));
   };
 
@@ -291,7 +299,7 @@ gist.create({
 
     render () {
         console.log(this.state.drawnBuilding)
-
+        var drawnBuildingVar = this.state.drawnBuilding
         var opacity = parseFloat(this.state.opacity)
         var draw = String(this.state.draw)
         var draw_height = parseFloat(this.state.draw_height)
@@ -320,8 +328,8 @@ gist.create({
                 pitch={this.state.pitch}
                 bearing={this.state.bearing}
                 onClick={this._onClickMap}
-                // onChange={this.handleChange}
-            >
+                //onStyleLoad={this._onStyleLoad}
+            > 
                 <DrawControl 
                 displayControlsDefault={false}
                 ref={(drawControl) => { this.drawControl = drawControl; }}
@@ -388,8 +396,7 @@ gist.create({
                     }
                   }}
                 />
-
-            </Map>
+            </Map>   
             <SiteInfo 
             stuff={this.state.string}
             SI_id={this.state.siteInfo_ID}
