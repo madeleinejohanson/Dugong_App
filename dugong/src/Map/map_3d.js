@@ -447,6 +447,7 @@ gist.create({
             <p>Colour Picker</p>
             <CirclePicker
             onChangeComplete={ this.colourChange }
+            colors= {["#f44336", "#e91e63", "#9c27b0", "#2196f3", "#4caf50", "#ff9800"]}
             /><br></br>
             <button onClick={this.handleGist.bind(this)}>
             SAVE BUILDING
