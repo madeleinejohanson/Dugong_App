@@ -5,8 +5,8 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import { CirclePicker } from 'react-color';
 import {Row} from 'react-bootstrap';
 import {Col} from 'react-bootstrap';
-import geojson from "./GeoJSON/minicity2d.js";
-import geojsonMatch from "./GeoJSON/minicity3d_3.js";
+import geojson from "./GeoJSON/PBE_COS_2d.js";
+import geojsonMatch from "./GeoJSON/PBE_COS_3d.js";
 import SiteInfo from './../Functions/siteInfo.js';
 import { area } from '@turf/turf';
 import GitHub from 'github-api';
@@ -30,12 +30,9 @@ geojsonMatch.features.map(
     return feature
     })
 //initial extuded buildings geojson loaded in map 
-var filteredGeojson = {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{ 
-  "type": "Polygon","coordinates": [[[151.205292222514,-33.8717258167423],[151.205298900679,-33.8717832668887],
-  [151.205307631595,-33.8718573721096],[151.205527141532,-33.8718452797009],[151.205513803131,-33.871713060999],
-  [151.205292222514,-33.8717258167423]]]},"properties":{"id":"0","height":20,"base_height":0,"colour":"#5d6eb6"}}]};
+var filteredGeojson = {"type":"FeatureCollection","features":[{"id":"c94735f8631262ec8436bc0614d6c40b","type":"Feature","properties":{"height":9,"base_height":0,"colour":"#f44336"},"geometry":{"coordinates":[[[151.06445435184867,-33.92122311874549],[151.0638930136367,-33.92149408133769],[151.06406723947975,-33.92176706999703],[151.06462059728557,-33.92148729542145],[151.06445435184867,-33.92122311874549]]],"type":"Polygon"}}]};
 
-var drawnGeojson = {"type":"FeatureCollection","features":[{"id":"cc3f3de5a7d59ee9b27518a13fa65d2e","type":"Feature","properties":{"height":20,"base_height":0,"colour":"#5d6eb6"},"geometry":{"coordinates":[[[151.20851775060197,-33.87031814681491],[151.20848746189426,-33.871055199345335],[151.2088702693323,-33.871149221211155],[151.20925457742692,-33.87096649989355],[151.20928897260177,-33.870282586597284],[151.20889822536424,-33.869995409026224],[151.20851775060197,-33.87031814681491]]],"type":"Polygon"}}]} 
+var drawnGeojson = {"type":"FeatureCollection","features":[{"id":"c94735f8631262ec8436bc0614d6c40b","type":"Feature","properties":{"height":9,"base_height":0,"colour":"#f44336"},"geometry":{"coordinates":[[[151.06445435184867,-33.92122311874549],[151.0638930136367,-33.92149408133769],[151.06406723947975,-33.92176706999703],[151.06462059728557,-33.92148729542145],[151.06445435184867,-33.92122311874549]]],"type":"Polygon"}}]};
 
 
 const Map = ReactMapboxGl({
