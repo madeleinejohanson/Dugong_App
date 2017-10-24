@@ -308,20 +308,37 @@ gist.create({
                 onClick={this._onClickMap}
                 //onStyleLoad={this._onStyleLoad}
             > 
+                <ScaleControl position='bottomLeft'/>
+                <GeoJSONLayer
+                  id="LOADED_GEOJSON"
+                  data={geojson}
+                  fillExtrusionPaint={{
+                    'fill-extrusion-color': {
+                      'type': 'identity',
+                      'property': 'colour'
+                    },
+                    'fill-extrusion-height': 0,
+                    'fill-extrusion-base': {
+                        'type': 'identity',
+                        'property': 'base_height'
+                    }
+                  }}
+                //fillExtrusionOnClick
+                />
                 <DrawControl 
                 displayControlsDefault={false}
                 ref={(drawControl) => { this.drawControl = drawControl; }}
+                //before="LOADED_GEOJSON"
                 controls={{
                 "polygon" : true,
                 "trash" : true
                 }}
                 
                 />
-                <ScaleControl position='bottomLeft'/>
                 <GeoJSONLayer
-                  id="LOADED_GEOJSON"
-                  data={geojson}
-                  fillExtrusionPaint={{
+                id="draw_layer"
+                data={this.state.drawnBuilding}
+                fillExtrusionPaint={{
                     'fill-extrusion-color': {
                       'type': 'identity',
                       'property': 'colour'
@@ -335,7 +352,6 @@ gist.create({
                         'property': 'base_height'
                     }
                   }}
-                //fillExtrusionOnClick
                 />
                 <GeoJSONLayer
                 id="filtered_Geojson"
@@ -354,24 +370,6 @@ gist.create({
                         'property': 'base_height'
                     },
                     'fill-extrusion-opacity' : opacity
-                  }}
-                />
-                <GeoJSONLayer
-                id="draw_layer"
-                data={this.state.drawnBuilding}
-                fillExtrusionPaint={{
-                    'fill-extrusion-color': {
-                      'type': 'identity',
-                      'property': 'colour'
-                    },
-                    'fill-extrusion-height': {
-                        'type': 'identity',
-                        'property': 'height'
-                    },
-                    'fill-extrusion-base': {
-                        'type': 'identity',
-                        'property': 'base_height'
-                    }
                   }}
                 />
             </Map>   
