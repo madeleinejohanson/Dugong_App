@@ -37,7 +37,7 @@ class SiteInfo extends Component {
           </p>
           </Col>
           <Col xs={6} md={4}>
-          <h4>Feaso</h4>
+          <h4>Feasibility Study</h4>
          
           <p>Height of Building: </p> {F_HOB>SI_HOB ?
             <div style={redStyle}> {this.props.F_HOB} </div>
